@@ -43,7 +43,7 @@ public class MDMSService {
 				throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");
 		}
 
-		Map<String, JSONArray> finalMasterMap = new HashMap<>();
+		
 		List<ModuleDetail> moduleDetails = mdmsCriteriaReq.getMdmsCriteria().getModuleDetails();
 
 		Map<String, Map<String, JSONArray>> responseMap = new HashMap<>();
@@ -52,6 +52,8 @@ public class MDMSService {
 
 			if(stateLevel.get(moduleDetail.getModuleName()) == null)
 				continue;
+			
+			Map<String, JSONArray> finalMasterMap = new HashMap<>();
 
 			for(MasterDetail masterDetail : moduleDetail.getMasterDetails()) {
 				JSONArray masterData;
