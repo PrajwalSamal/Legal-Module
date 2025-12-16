@@ -1,13 +1,14 @@
-package egov.legalModule.caseManagement;
+package org.egov.legal;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CaseManagementApplication {
+public class CaseManagement {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CaseManagementApplication.class, args);
+		SpringApplication.run(CaseManagement.class, args);
+
 	}
 
 }

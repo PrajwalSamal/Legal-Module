@@ -1,57 +1,61 @@
 package egov.legalModule.legal_persister.enities;
 
+
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
+import jakarta.persistence.OneToMany;
 
 @Entity
-public class ParaWiseRemark {
+public class HearingDetail {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonProperty("para_wise_remark_id")
-    private Long paraWiseRemarkId;
+    @JsonProperty("hearing_id")
+    private Long hearingId;
 
-    @JsonProperty("para_number")
-    private int paraNumber;
+    @JsonProperty("hearing_date")
+    private String hearingDate;
 
-    @JsonProperty("remark")
-    private String remark;
+    @OneToMany(mappedBy = "hearingDetail")
+    @JsonProperty("alerts")
+    private List<Alert> alerts;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "case_id")
     @JsonProperty("case")
     private Case caseEntity;
 
-	public Long getParaWiseRemarkId() {
-		return paraWiseRemarkId;
+
+	public Long getHearingId() {
+		return hearingId;
 	}
 
-	public void setParaWiseRemarkId(Long paraWiseRemarkId) {
-		this.paraWiseRemarkId = paraWiseRemarkId;
+	public void setHearingId(Long hearingId) {
+		this.hearingId = hearingId;
 	}
 
-	public int getParaNumber() {
-		return paraNumber;
+	public String getHearingDate() {
+		return hearingDate;
 	}
 
-	public void setParaNumber(int paraNumber) {
-		this.paraNumber = paraNumber;
+	public void setHearingDate(String hearingDate) {
+		this.hearingDate = hearingDate;
 	}
 
-	public String getRemark() {
-		return remark;
+	public List<Alert> getAlerts() {
+		return alerts;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setAlerts(List<Alert> alerts) {
+		this.alerts = alerts;
 	}
 
 	public Case getCaseEntity() {
@@ -66,5 +70,3 @@ public class ParaWiseRemark {
 
     
 }
-
-

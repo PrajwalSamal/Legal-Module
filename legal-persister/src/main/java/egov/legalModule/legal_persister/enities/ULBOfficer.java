@@ -8,26 +8,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Advocate {
+public class ULBOfficer {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonProperty("advocate_id")
-    private Long advocateId;
+    @JsonProperty("officer_id")
+    private Long officerId;
 
     @JsonProperty("name")
     private String name;
 
     @JsonProperty("role")
     private String role;
-
-    @JsonProperty("notification_sent")
-    private boolean notificationSent;
-    
-	public Long getAdvocateId() {
-		return advocateId;
+	public Long getOfficerId() {
+		return officerId;
 	}
-	public void setAdvocateId(Long advocateId) {
-		this.advocateId = advocateId;
+	public void setOfficerId(Long officerId) {
+		this.officerId = officerId;
 	}
 	public String getName() {
 		return name;
@@ -40,12 +36,6 @@ public class Advocate {
 	}
 	public void setRole(String role) {
 		this.role = role;
-	}
-	public boolean isNotificationSent() {
-		return notificationSent;
-	}
-	public void setNotificationSent(boolean notificationSent) {
-		this.notificationSent = notificationSent;
 	}
 
     
