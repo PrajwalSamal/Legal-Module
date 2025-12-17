@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 
 @Entity
+@Table(name = "\"interim_order\"")
 public class InterimOrder {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -26,11 +29,23 @@ public class InterimOrder {
     @JsonProperty("order_details")
     private String orderDetails;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "case_id")
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_id",nullable = false)
     @JsonProperty("case")
     private Case caseEntity;
 
+	public InterimOrder(Long interimOrderId, String orderDate, String orderDetails, Case caseEntity) {
+		super();
+		this.interimOrderId = interimOrderId;
+		this.orderDate = orderDate;
+		this.orderDetails = orderDetails;
+		this.caseEntity = caseEntity;
+	}
+
+	public InterimOrder() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Long getInterimOrderId() {
 		return interimOrderId;

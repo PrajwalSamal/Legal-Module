@@ -4,16 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 
 
 @Entity
+@Table(name = "\"counter_affidavit\"")
 public class CounterAffidavit {
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -26,11 +28,27 @@ public class CounterAffidavit {
 	    @JsonProperty("details")
 	    private String details;
 
-	    @OneToOne(cascade = CascadeType.ALL)
-	    @JoinColumn(name = "case_id")
+	    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	    @JoinColumn(name = "case_id",nullable = false)
 	    @JsonProperty("case")
 	    private Case caseEntity;
+	    
+	    
+	    
 
+
+	public CounterAffidavit() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+
+	public CounterAffidavit(Long counterAffidavitId, String submissionDate, String details, Case caseEntity) {
+			super();
+			this.counterAffidavitId = counterAffidavitId;
+			this.submissionDate = submissionDate;
+			this.details = details;
+			this.caseEntity = caseEntity;
+		}
 
 	public Long getCounterAffidavitId() {
 		return counterAffidavitId;

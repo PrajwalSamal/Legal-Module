@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,9 +17,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "register_case")
+@Table(name = "\"case\"")
 public class Case {
-	@Id
+	
+	
+ 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @JsonProperty("case_id")
     private Long caseId;
@@ -26,12 +29,12 @@ public class Case {
     @JsonProperty("registration_date")
     private String registrationDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "advocate_id")
     @JsonProperty("advocate")
     private Advocate advocate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "ulb_officer_id")
     @JsonProperty("ulb_officer")
     private ULBOfficer ulbOfficer;
@@ -68,11 +71,38 @@ public class Case {
     @JsonProperty("case_closure")
     private CaseClosure caseClosure;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_advocate_id")
     @JsonProperty("assigned_advocate")
     private Advocate assignedAdvocate;
+    
+    
 
+
+	public Case(Long caseId, String registrationDate, Advocate advocate, ULBOfficer ulbOfficer,
+			List<Document> documents, List<HearingDetail> hearingDetails, Judgment judgment, Appeal appeal,
+			CounterAffidavit counterAffidavit, List<ParaWiseRemark> paraWiseRemarks, InterimOrder interimOrder,
+			CaseClosure caseClosure, Advocate assignedAdvocate) {
+		super();
+		this.caseId = caseId;
+		this.registrationDate = registrationDate;
+		this.advocate = advocate;
+		this.ulbOfficer = ulbOfficer;
+		this.documents = documents;
+		this.hearingDetails = hearingDetails;
+		this.judgment = judgment;
+		this.appeal = appeal;
+		this.counterAffidavit = counterAffidavit;
+		this.paraWiseRemarks = paraWiseRemarks;
+		this.interimOrder = interimOrder;
+		this.caseClosure = caseClosure;
+		this.assignedAdvocate = assignedAdvocate;
+	}
+
+	public Case() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Long getCaseId() {
 		return caseId;

@@ -6,8 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "\"ULB_officer\"")
 public class ULBOfficer {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -19,6 +21,16 @@ public class ULBOfficer {
 
     @JsonProperty("role")
     private String role;
+    
+	public ULBOfficer(Long officerId, String name, String role) {
+		super();
+		this.officerId = officerId;
+		this.name = name;
+		this.role = role;
+	}
+	public ULBOfficer() {
+		super();
+	}
 	public Long getOfficerId() {
 		return officerId;
 	}

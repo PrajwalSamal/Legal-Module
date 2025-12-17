@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "\"document\"")
 public class Document {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -26,11 +29,27 @@ public class Document {
     @JsonProperty("url")
     private String url;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "case_id")
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_id",nullable = false)
     @JsonProperty("case")
     private Case caseEntity;
+    
+    
 
+
+	public Document(Long documentId, String documentType, String uploadDate, String url, Case caseEntity) {
+		super();
+		this.documentId = documentId;
+		this.documentType = documentType;
+		this.uploadDate = uploadDate;
+		this.url = url;
+		this.caseEntity = caseEntity;
+	}
+
+	public Document() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Long getDocumentId() {
 		return documentId;

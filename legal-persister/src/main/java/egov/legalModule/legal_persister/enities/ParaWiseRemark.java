@@ -4,15 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 
 @Entity
+@Table(name = "\"para_wise_remark\"")
 public class ParaWiseRemark {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,10 +27,22 @@ public class ParaWiseRemark {
     @JsonProperty("remark")
     private String remark;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "case_id")
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_id",nullable = false)
     @JsonProperty("case")
     private Case caseEntity;
+
+	public ParaWiseRemark(Long paraWiseRemarkId, int paraNumber, String remark, Case caseEntity) {
+		super();
+		this.paraWiseRemarkId = paraWiseRemarkId;
+		this.paraNumber = paraNumber;
+		this.remark = remark;
+		this.caseEntity = caseEntity;
+	}
+
+	public ParaWiseRemark() {
+		super();
+	}
 
 	public Long getParaWiseRemarkId() {
 		return paraWiseRemarkId;
