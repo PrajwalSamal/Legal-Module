@@ -2,8 +2,8 @@ package org.egov.legal.entity;
 
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "advocates")
+//@Entity
+//@Table(name = "advocates")
 public class Advocate {
 
     @Id

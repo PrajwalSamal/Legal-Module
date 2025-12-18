@@ -14,8 +14,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "case_filing")
+//@Entity
+//@Table(name = "case_filing")
 public class CaseFiling {
 
     @Id

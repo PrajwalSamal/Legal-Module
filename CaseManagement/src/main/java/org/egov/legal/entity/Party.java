@@ -10,8 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "parties")
+//@Entity
+//@Table(name = "parties")
 public class Party {
 
     @Id

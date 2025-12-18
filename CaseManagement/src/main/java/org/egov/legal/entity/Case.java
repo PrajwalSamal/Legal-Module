@@ -8,8 +8,8 @@ import org.hibernate.annotations.ManyToAny;
 
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "cases")
+//@Entity
+//@Table(name = "cases")
 public class Case extends Auditable {
 
     @Id
