@@ -10,23 +10,32 @@ public record CaseFiledEvent(
         UUID eventId,
 
         String tenantId,
+        String diaryNumber,
 
-        String diaryNumber,          // generated or passed
         String caseType,
         String caseCategory,
-        String courtDetails,
+
+        String courtType,
+        String courtCode,
 
         String title,
         String description,
         String department,
+
+        // 🔴 PETITIONER DETAILS
+        String petitionerType,
+        String petitionerName,
+        String petitionerAddress,
+        String petitionerContact,
+        String petitionerEmail,
 
         List<String> advocateIds,
         String ulbOfficerId,
 
         List<DocumentPayload> documents,
 
-        ScrutinyStatus scrutinyStatus,       // PENDING
-        boolean registered,          // false
+        String scrutinyStatus,
+        boolean registered,
 
         OffsetDateTime occurredAt,
         int version

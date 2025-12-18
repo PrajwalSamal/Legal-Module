@@ -8,8 +8,8 @@ import org.hibernate.annotations.ManyToAny;
 
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "case_status_history")
+//@Entity
+//@Table(name = "case_status_history")
 public class CaseStatusHistory {
 
     @Id
