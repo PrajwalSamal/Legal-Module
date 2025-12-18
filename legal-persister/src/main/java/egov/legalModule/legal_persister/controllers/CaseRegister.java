@@ -4,13 +4,15 @@ package egov.legalModule.legal_persister.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import egov.legalModule.legal_persister.dtos.RegisterCase;
-import egov.legalModule.legal_persister.enities.Case;
+
+
 import egov.legalModule.legal_persister.services.CaseRegisterService;
 
 @RestController
@@ -21,14 +23,10 @@ public class CaseRegister {
 	private CaseRegisterService service;
 	
 	@PostMapping("/register")
-	public String registerCase(@RequestBody RegisterCase resgisCase) {
+	public String registerCase(@RequestBody CaseRegister regisCase) {
 	
+		return null;
 		
-		RegisterCase case2=new RegisterCase();
-//		case2=resgisCase;
-		
-//		service.registerCase(case2);
-		return "Case Resitered Sucessfully";
 	}
 	
 
