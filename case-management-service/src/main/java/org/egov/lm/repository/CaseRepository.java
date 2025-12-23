@@ -1,5 +1,6 @@
 package org.egov.lm.repository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,9 @@ import org.egov.lm.models.PropertyCriteria;
 import org.egov.lm.models.user.User;
 import org.egov.lm.models.user.UserDetailResponse;
 import org.egov.lm.models.user.UserSearchRequest;
+import org.egov.lm.repository.builder.CaseQueryBuilder;
 import org.egov.lm.repository.builder.PropertyQueryBuilder;
+import org.egov.lm.repository.rowmapper.CaseRowMapper;
 import org.egov.lm.repository.rowmapper.OpenPropertyRowMapper;
 import org.egov.lm.repository.rowmapper.PropertyRowMapper;
 import org.egov.lm.service.UserService;
@@ -30,16 +33,13 @@ public class CaseRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	private PropertyQueryBuilder queryBuilder;
-
-	@Autowired
-	private PropertyRowMapper rowMapper;
-
-	@Autowired
-	private OpenPropertyRowMapper openRowMapper;
+	private CaseQueryBuilder queryBuilder;
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CaseRowMapper rowMapper;
 
 	public Boolean enrichCriteriaFromUser(CaseCriteria criteria, RequestInfo requestInfo) {
 
@@ -64,9 +64,12 @@ public class CaseRepository {
 		return false;
 	}
 
-	public List<Case> getAllRegisterdCases(String userTenant,CaseCriteria criteria) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Case> getAllRegisterdCases(CaseCriteria criteria) {
+		List<Object> preparedStmtList = new ArrayList<>();
+		String query = queryBuilder.getCasesSearchQuery(criteria, preparedStmtList);
+
+		return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+
 	}
 
 }

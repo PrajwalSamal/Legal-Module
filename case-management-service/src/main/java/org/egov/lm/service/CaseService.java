@@ -62,11 +62,11 @@ public class CaseService {
 		
 		Set<String> caseIds = criteria.getCaseIds();
 		
-		String userTenant = criteria.getTenantId();
-		if(criteria.getTenantId() == null)
-			userTenant = requestInfo.getUserInfo().getTenantId();
+//		String userTenant = criteria.getTenantId();
+//		if(criteria.getTenantId() == null)
+//			userTenant = requestInfo.getUserInfo().getTenantId();
 		
-		cases = caseRepository.getAllRegisterdCases(userTenant,criteria);
+		cases = caseRepository.getAllRegisterdCases(criteria);
 		
 		return null;
 	}

@@ -34,6 +34,9 @@ public class Advocate{
 
     @JsonProperty("mobileNumber")
     private String mobileNumber;
+    
+    @JsonProperty("role")
+    private String role;
 
     @JsonProperty("email")
     private String email;
