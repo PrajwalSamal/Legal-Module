@@ -43,8 +43,15 @@ public class CaseConfiguration {
     @Value("${is.workflow.enabled}")
     private Boolean isWorkflowEnabled;
     
+    @Value("${lm.search.pagination.default.limit}")
+    private Long defaultLimit;
+
+    @Value("${lm.search.pagination.default.offset}")
+    private Long defaultOffset;
     
-    
+    @Value("${lm.search.pagination.max.search.limit}")
+    private Long maxSearchLimit;
+ 
     
     @Value("${legal.module.name}")
   	private String legalModuleName;  

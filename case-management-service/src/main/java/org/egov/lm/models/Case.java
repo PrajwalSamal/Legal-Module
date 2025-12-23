@@ -1,11 +1,13 @@
 package org.egov.lm.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.egov.lm.models.enums.Status;
 import org.egov.lm.models.workflow.ProcessInstance;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -28,79 +30,127 @@ import lombok.ToString;
 @Builder
 public class Case {
 
-    /* -------------------- Mandatory Identifiers -------------------- */
+	/* -------------------- Mandatory Identifiers -------------------- */
 
-    @JsonProperty("caseId")
-    @NotBlank(message = "caseId is mandatory for update")
-    private String caseId;
+	@JsonProperty("caseId")
+	@NotBlank(message = "caseId is mandatory for update")
+	private String caseId;
 
-    @JsonProperty("tenantId")
-    @NotBlank(message = "tenantId is mandatory for update")
-    private String tenantId;
+	@JsonProperty("tenantId")
+	@NotBlank(message = "tenantId is mandatory for update")
+	private String tenantId;
 
-    /* -------------------- Updatable Case Attributes -------------------- */
+	/* -------------------- Updatable Case Attributes -------------------- */
 
-    @JsonProperty("caseType")
-    private String caseType;
+	@JsonProperty("caseType")
+	private String caseType;
 
-    @JsonProperty("caseCategory")
-    private String caseCategory;
+	@JsonProperty("caseCategory")
+	private String caseCategory;
 
-    @JsonProperty("title")
-    private String title;
+	@JsonProperty("title")
+	private String title;
 
-    @JsonProperty("description")
-    private String description;
+	@JsonProperty("description")
+	private String description;
 
-    @JsonProperty("department")
-    private String department;
+	@JsonProperty("department")
+	private String department;
 
-    /* -------------------- Parties -------------------- */
+	@JsonProperty("status")
+	private Status status;
 
-    @JsonProperty("advocates")
-    @Valid
-    private List<Advocate> advocates;
+	/* -------------------- Parties -------------------- */
 
-    @JsonProperty("petitioners")
-    @Valid
-    private List<Petitioner> petitioners;
+	@JsonProperty("advocates")
+	@Valid
+	private List<Advocate> advocates;
 
-    @JsonProperty("respondents")
-    @Valid
-    private List<Respondent> respondents;
+	@JsonProperty("petitioners")
+	@Valid
+	private List<Petitioner> petitioners;
 
-    /* -------------------- Court & Hearing -------------------- */
+	@JsonProperty("respondents")
+	@Valid
+	private List<Respondent> respondents;
 
-    @JsonProperty("courtType")
-    private String courtType;
+	/* -------------------- Court & Hearing -------------------- */
 
-    @JsonProperty("courtName")
-    private String courtName;
+	@JsonProperty("courtType")
+	private String courtType;
 
-    @JsonProperty("nextHearingDate")
-    private Long nextHearingDate;
-    
-    private Judgement judgement;
+	@JsonProperty("courtName")
+	private String courtName;
 
-    /* -------------------- Documents -------------------- */
+	@JsonProperty("nextHearingDate")
+	private Long nextHearingDate;
 
-    @JsonProperty("documents")
-    @Valid
-    private List<Document> documents;
+	private Judgement judgement;
 
-    /* -------------------- Workflow -------------------- */
+	/* -------------------- Documents -------------------- */
 
-    @JsonProperty("workflow")
-    @NotNull(message = "workflow is mandatory for case update")
-    private ProcessInstance workflow;
+	@JsonProperty("documents")
+	@Valid
+	private List<Document> documents;
 
-    /* -------------------- Extensible Data -------------------- */
+	/* -------------------- Workflow -------------------- */
 
-    @JsonProperty("additionalDetails")
-    private JsonNode additionalDetails;
+	@JsonProperty("workflow")
+	@NotNull(message = "workflow is mandatory for case update")
+	private ProcessInstance workflow;
 
-    /* -------------------- Audit -------------------- */
+	/* -------------------- Extensible Data -------------------- */
 
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails;
+	@JsonProperty("additionalDetails")
+	private JsonNode additionalDetails;
+
+	/* -------------------- Audit -------------------- */
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+
+
+	public Case addAdvocatesItem(Advocate advocatesItem) {
+		if (this.advocates == null) {
+			this.advocates = new ArrayList<>();
+		}
+
+		if (advocatesItem != null) {
+			this.advocates.add(advocatesItem);
+		}
+		return this;
+	}
+
+	public Case addPetitionersItem(Petitioner petitionersItem) {
+		if (this.petitioners == null) {
+			this.petitioners = new ArrayList<>();
+		}
+
+		if (petitionersItem != null) {
+			this.petitioners.add(petitionersItem);
+		}
+		return this;
+	}
+
+	public Case addRespondentsItem(Respondent respondentsItem) {
+		if (this.respondents == null) {
+			this.respondents = new ArrayList<>();
+		}
+
+		if (respondentsItem != null) {
+			this.respondents.add(respondentsItem);
+		}
+		return this;
+	}
+
+	public Case addDocumentsItem(Document documentsItem) {
+		if (this.documents == null) {
+			this.documents = new ArrayList<>();
+		}
+
+		if (documentsItem != null) {
+			this.documents.add(documentsItem);
+		}
+		return this;
+	}
 }
