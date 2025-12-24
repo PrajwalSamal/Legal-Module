@@ -28,7 +28,7 @@ public class CaseService {
 
 	@Autowired
 	private Producer producer;
-	
+
 	@Autowired
 	private CaseRepository caseRepository;
 
@@ -47,28 +47,27 @@ public class CaseService {
 	}
 
 	public List<Case> searchCases(@Valid CaseCriteria criteria, RequestInfo requestInfo) {
-         
+
 		List<Case> cases = new ArrayList<>();
- 
+
 		if (criteria.isAudit() && (CollectionUtils.isEmpty(criteria.getCaseIds()))) {
 
 			throw new CustomException("EG_LM_CASE_AUDIT_ERROR", "Case Ids are null");
 		}
-		
+
 //		Boolean shouldReturnEmptyList = caseRepository.enrichCriteriaFromUser(criteria, requestInfo);
 //
 //		if (shouldReturnEmptyList)
 //			return Collections.emptyList();
-		
+
 		Set<String> caseIds = criteria.getCaseIds();
-		
+
 //		String userTenant = criteria.getTenantId();
 //		if(criteria.getTenantId() == null)
 //			userTenant = requestInfo.getUserInfo().getTenantId();
-		
-		cases = caseRepository.getAllRegisterdCases(criteria);
-		
-		return null;
+
+		return caseRepository.getAllRegisterdCases(criteria);
+
 	}
 
 }

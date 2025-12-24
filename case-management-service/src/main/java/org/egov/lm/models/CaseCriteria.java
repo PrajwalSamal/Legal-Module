@@ -43,6 +43,7 @@ public class CaseCriteria {
 
     private String department;
 
+    private String status;
     /* -------------------- Court & Hearing -------------------- */
 
     private String courtType;
@@ -52,6 +53,8 @@ public class CaseCriteria {
     private Long fromHearingDate;
 
     private Long toHearingDate;
+    
+    private Boolean hasJudgement;
 
 
     /* -------------------- Pagination & Audit -------------------- */

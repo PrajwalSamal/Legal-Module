@@ -66,7 +66,7 @@ public class CaseRepository {
 
 	public List<Case> getAllRegisterdCases(CaseCriteria criteria) {
 		List<Object> preparedStmtList = new ArrayList<>();
-		String query = queryBuilder.getCasesSearchQuery(criteria, preparedStmtList);
+		String query = queryBuilder.buildPaginatedCaseIdQuery(criteria, preparedStmtList);
 
 		return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
 

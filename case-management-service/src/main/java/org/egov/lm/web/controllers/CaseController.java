@@ -84,7 +84,7 @@ public class CaseController {
 		
 //		propertyValidator.validatePropertyCriteria(caseCriteria, requestInfoWrapper.getRequestInfo());
 		List<Case> cases = caseService.searchCases(caseCriteria,requestInfoWrapper.getRequestInfo());
-		CaseResponse response = CaseResponse.builder().Cases(cases).responseInfo(
+		CaseResponse response = CaseResponse.builder().cases(cases).responseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);

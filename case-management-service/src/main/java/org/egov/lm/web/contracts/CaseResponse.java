@@ -26,6 +26,6 @@ public class CaseResponse {
 	  private ResponseInfo responseInfo;
 	
 	@JsonProperty("Cases")
-	  private List<Case> Cases;
+	  private List<Case> cases;
 
 }
