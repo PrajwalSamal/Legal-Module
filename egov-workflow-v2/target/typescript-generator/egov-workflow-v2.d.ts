@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.22.595 on 2025-12-22 14:53:18.
+// Generated using typescript-generator version 2.22.595 on 2025-12-24 11:53:42.
 
 export namespace Digit {
 

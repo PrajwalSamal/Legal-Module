@@ -190,4 +190,5 @@ public class CaseQueryBuilder {
 	private String createPlaceholders(int count) {
 		return String.join(COMMA, java.util.Collections.nCopies(count, "?"));
 	}
+
 }
