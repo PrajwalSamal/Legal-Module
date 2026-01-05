@@ -52,9 +52,6 @@ public class CaseRowMapper implements ResultSetExtractor<List<Case>> {
         return result;
     }
 
-    /* ============================================================
-       ROOT CASE
-       ============================================================ */
 
     private Case buildCase(ResultSet rs) {
         try {
@@ -131,10 +128,6 @@ public class CaseRowMapper implements ResultSetExtractor<List<Case>> {
 
         agg.addDocument(document);
     }
-
-    /* ============================================================
-       AUDIT + JSON
-       ============================================================ */
 
     private AuditDetails buildAudit(ResultSet rs) throws SQLException {
         return AuditDetails.builder()

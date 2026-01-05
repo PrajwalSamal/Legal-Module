@@ -1,0 +1,71 @@
+serviceMaps:
+  serviceName: legal-module
+  mappings:
+    - version: 1.0
+      description: Persists case registry data into the database
+      fromTopic: save-case-registry
+      isTransaction: true
+      queryMaps:
+        - query: "INSERT INTO eg_lm_case (caseId, tenantId, caseType, caseCategory, title, description, department, courtType, courtName, nextHearingDate, judgementId, workflowId, additionalDetails, createdBy, createdTime, lastModifiedBy, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+          basePath: case
+          jsonMaps:
+            - jsonPath: $.case.caseId
+            - jsonPath: $.case.tenantId
+            - jsonPath: $.case.caseType
+            - jsonPath: $.case.caseCategory
+            - jsonPath: $.case.title
+            - jsonPath: $.case.description
+            - jsonPath: $.case.department
+            - jsonPath: $.case.courtType
+            - jsonPath: $.case.courtName
+            - jsonPath: $.case.nextHearingDate
+            - jsonPath: $.case.judgement.judgementId
+            - jsonPath: $.case.workflow.workflowId
+            - jsonPath: $.case.additionalDetails
+            - jsonPath: $.case.auditDetails.createdBy
+            - jsonPath: $.case.auditDetails.createdTime
+            - jsonPath: $.case.auditDetails.lastModifiedBy
+            - jsonPath: $.case.auditDetails.lastModifiedTime
+
+        - query: "INSERT INTO eg_lm_case_advocate (id, caseId, advocateId, name, mobileNumber) VALUES (?, ?, ?, ?, ?);"
+          basePath: case.advocates.*
+          jsonMaps:
+            - jsonPath: $.case.caseId
+            - jsonPath: $.case.advocates.[*].advocateId
+            - jsonPath: $.case.advocates.[*].name
+            - jsonPath: $.case.advocates.[*].mobileNumber
+
+        - query: "INSERT INTO eg_lm_case_petitioner (id, caseId, name, address, contactNo) VALUES (?, ?, ?, ?, ?);"
+          basePath: case.petitioners.*
+          jsonMaps:
+            - jsonPath: $.case.petitioners.*.petitionerId
+            - jsonPath: $.case.caseId
+            - jsonPath: $.case.petitioners.*.name
+            - jsonPath: $.case.petitioners.*.address
+            - jsonPath: $.case.petitioners.*.contactNo
+
+        - query: "INSERT INTO eg_lm_case_respondent (id, caseId, name, address, contactNo) VALUES (?, ?, ?, ?, ?);"
+          basePath: case.respondents.*
+          jsonMaps:
+            - jsonPath: $.case.respondents.*.respondentId
+            - jsonPath: $.case.caseId
+            - jsonPath: $.case.respondents.*.name
+            - jsonPath: $.case.respondents.*.address
+            - jsonPath: $.case.respondents.*.contactNo
+
+        - query: "INSERT INTO eg_lm_case_document (id, caseId, documentType, fileStoreId, documentUid) VALUES (?, ?, ?, ?, ?);"
+          basePath: case.documents.*
+          jsonMaps:
+            - jsonPath: $.case.documents.[*].documentUid
+            - jsonPath: $.case.caseId
+            - jsonPath: $.case.documents.[*].documentType
+            - jsonPath: $.case.documents.[*].fileStoreId
+
+        - query: "INSERT INTO eg_lm_judgement (judgementId, caseId, remarks, orderDetail) VALUES (?, ?, ?, ?);"
+          basePath: case.judgement
+          jsonMaps:
+            - jsonPath: $.case.judgement.judgementId
+            - jsonPath: $.case.caseId
+            - jsonPath: $.case.judgement.orderDetail
+            - jsonPath: $.case.judgement.remarks
+
