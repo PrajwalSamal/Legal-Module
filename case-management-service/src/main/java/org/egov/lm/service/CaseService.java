@@ -48,20 +48,23 @@ public class CaseService {
 
 	public Case fileCase(@Valid CaseRequest caseRequest) {
 
-		if (caseConfiguration.getIsWorkflowEnabled()) {
-			wfService.updateCaseWorkflow(caseRequest);
-		}
+		// validate
+		
+		//enrich
+		
+		//
 		
 		AuditDetails auditDetails=new AuditDetails();
 		auditDetails.setCreatedBy("Ram");
 		auditDetails.setCreatedTime(System.currentTimeMillis());
 		auditDetails.setLastModifiedBy("ram");
 		auditDetails.setLastModifiedTime(System.currentTimeMillis());
-	
-
-		Case case1=caseRequest.getCases();
-		case1.setAuditDetails(auditDetails);
 		
+		caseRequest.getCases().setAuditDetails(auditDetails);
+	
+		if (caseConfiguration.getIsWorkflowEnabled()) {
+			wfService.updateCaseWorkflow(caseRequest);
+		}
 		producer.push(caseConfiguration.getSaveCaseTopic(), caseRequest);
 		//caseRequest.getCases().setWorkflow(null);
 		return caseRequest.getCases();
