@@ -1,6 +1,5 @@
 package org.egov.lm.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -110,47 +109,4 @@ public class Case {
 	private AuditDetails auditDetails;
 
 
-	public Case addAdvocatesItem(Advocate advocatesItem) {
-		if (this.advocates == null) {
-			this.advocates = new ArrayList<>();
-		}
-
-		if (advocatesItem != null) {
-			this.advocates.add(advocatesItem);
-		}
-		return this;
-	}
-
-	public Case addPetitionersItem(Petitioner petitionersItem) {
-		if (this.petitioners == null) {
-			this.petitioners = new ArrayList<>();
-		}
-
-		if (petitionersItem != null) {
-			this.petitioners.add(petitionersItem);
-		}
-		return this;
-	}
-
-	public Case addRespondentsItem(Respondent respondentsItem) {
-		if (this.respondents == null) {
-			this.respondents = new ArrayList<>();
-		}
-
-		if (respondentsItem != null) {
-			this.respondents.add(respondentsItem);
-		}
-		return this;
-	}
-
-	public Case addDocumentsItem(Document documentsItem) {
-		if (this.documents == null) {
-			this.documents = new ArrayList<>();
-		}
-
-		if (documentsItem != null) {
-			this.documents.add(documentsItem);
-		}
-		return this;
-	}
 }

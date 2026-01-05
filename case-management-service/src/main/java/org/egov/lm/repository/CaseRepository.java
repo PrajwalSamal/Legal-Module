@@ -9,18 +9,18 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.lm.models.Advocate;
 import org.egov.lm.models.Case;
 import org.egov.lm.models.CaseCriteria;
-import org.egov.lm.models.PropertyCriteria;
 import org.egov.lm.models.user.User;
 import org.egov.lm.models.user.UserDetailResponse;
 import org.egov.lm.models.user.UserSearchRequest;
+import org.egov.lm.repository.builder.AdvocateQueryBuilder;
 import org.egov.lm.repository.builder.CaseQueryBuilder;
-import org.egov.lm.repository.builder.PropertyQueryBuilder;
+import org.egov.lm.repository.rowmapper.AdvocateRowMapper;
 import org.egov.lm.repository.rowmapper.CaseRowMapper;
-import org.egov.lm.repository.rowmapper.OpenPropertyRowMapper;
-import org.egov.lm.repository.rowmapper.PropertyRowMapper;
 import org.egov.lm.service.UserService;
+import org.egov.lm.web.contracts.CaseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -40,6 +40,12 @@ public class CaseRepository {
 	
 	@Autowired
 	private CaseRowMapper rowMapper;
+	
+	@Autowired
+	private AdvocateRowMapper advocateRowMapper;
+	
+	@Autowired
+	private AdvocateQueryBuilder builder;
 
 	public Boolean enrichCriteriaFromUser(CaseCriteria criteria, RequestInfo requestInfo) {
 
@@ -66,10 +72,17 @@ public class CaseRepository {
 
 	public List<Case> getAllRegisterdCases(CaseCriteria criteria) {
 		List<Object> preparedStmtList = new ArrayList<>();
-		String query = queryBuilder.getCasesSearchQuery(criteria, preparedStmtList);
+		String query = queryBuilder.buildPaginatedCaseIdQuery(criteria, preparedStmtList);
 
 		return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
 
+	}
+
+	public List<Advocate> getAdvocates(@Valid CaseRequest caseRequest) {
+		List<Object> preparedStmtList = new ArrayList<>();
+		String query = builder.fetchCaseAdvocates(caseRequest);
+
+		return jdbcTemplate.query(query, preparedStmtList.toArray(), advocateRowMapper);
 	}
 
 }

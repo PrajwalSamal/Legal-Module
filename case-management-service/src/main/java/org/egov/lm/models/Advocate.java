@@ -2,6 +2,8 @@ package org.egov.lm.models;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.boot.actuate.audit.AuditEventRepository;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,7 +21,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Advocate{
+public class Advocate {
 
     @JsonProperty("advocateId")
     @NotBlank(message = "advocateId is mandatory")
@@ -35,6 +37,9 @@ public class Advocate{
     @JsonProperty("mobileNumber")
     private String mobileNumber;
     
+    @JsonProperty("activeCaseCount")
+    private int activeCaseCount;
+    
     @JsonProperty("role")
     private String role;
 
@@ -43,4 +48,7 @@ public class Advocate{
 
     @JsonProperty("isGovernmentAdvocate")
     private Boolean isGovernmentAdvocate;
+    
+    @JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
 }

@@ -22,6 +22,9 @@ public class CaseConfiguration {
     @Value("${persister.save.case.topic}")
     private String saveCaseTopic;
     
+    @Value("${persister.update.case.topic}")
+    private String updateCaseTopic;
+    
     
 // Workflow
 	

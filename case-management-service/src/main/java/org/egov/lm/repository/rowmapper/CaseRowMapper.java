@@ -1,19 +1,17 @@
 package org.egov.lm.repository.rowmapper;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 import org.egov.lm.models.*;
 import org.egov.lm.models.enums.Status;
+import org.egov.lm.repository.aggregate.CaseAggregate;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,175 +19,145 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class CaseRowMapper implements ResultSetExtractor<List<Case>> {
 
-    @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper objectMapper;
+
+    public CaseRowMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public List<Case> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-        Map<String, Case> caseMap = new LinkedHashMap<>();
+        Map<String, CaseAggregate> aggregateMap = new LinkedHashMap<>();
 
         while (rs.next()) {
 
             String caseId = rs.getString("caseid");
-            Case currentCase = caseMap.get(caseId);
 
-            if (currentCase == null) {
+            CaseAggregate aggregate = aggregateMap.computeIfAbsent(
+                    caseId,
+                    id -> new CaseAggregate(buildCase(rs))
+            );
 
-                AuditDetails auditDetails = getAuditDetails(rs);
-
-                Judgement judgement = null;
-                String judgementId = rs.getString("judgementid");
-                if (judgementId != null) {
-                    judgement = Judgement.builder()
-                            .judgementId(judgementId)
-                            .remark(rs.getString("remark"))
-                            .orderDetail(rs.getString("orderdetail"))
-                            .build();
-                }
-
-                currentCase = Case.builder()
-                        .caseId(caseId)
-                        .tenantId(rs.getString("tenantid"))
-                        .caseType(rs.getString("casetype"))
-                        .caseCategory(rs.getString("casecategory"))
-                        .title(rs.getString("title"))
-                        .description(rs.getString("description"))
-                        .department(rs.getString("department"))
-                        .courtType(rs.getString("courttype"))
-                        .courtName(rs.getString("courtname"))
-                        .nextHearingDate(rs.getLong("nexthearingdate"))
-                        .status(Status.fromValue(rs.getString("casestatus")))
-                        .additionalDetails(getAdditionalDetails(rs, "additionaldetails"))
-                        .auditDetails(auditDetails)
-                        .judgement(judgement)
-                        .build();
-
-                caseMap.put(caseId, currentCase);
-            }
-
-            addAdvocate(rs, currentCase);
-            addPetitioner(rs, currentCase);
-            addRespondent(rs, currentCase);
-            addDocument(rs, currentCase);
+            addAdvocate(rs, aggregate);
+            addPetitioner(rs, aggregate);
+            addRespondent(rs, aggregate);
+            addDocument(rs, aggregate);
         }
 
-        return new ArrayList<>(caseMap.values());
+        List<Case> result = new ArrayList<>();
+        for (CaseAggregate agg : aggregateMap.values()) {
+            result.add(agg.toCase());
+        }
+        return result;
     }
 
-    /* -------------------- Children -------------------- */
 
-    private void addAdvocate(ResultSet rs, Case currentCase) throws SQLException {
+    private Case buildCase(ResultSet rs) {
+        try {
+            return Case.builder()
+                    .caseId(rs.getString("caseid"))
+                    .tenantId(rs.getString("tenantid"))
+                    .caseType(rs.getString("casetype"))
+                    .caseCategory(rs.getString("casecategory"))
+                    .title(rs.getString("title"))
+                    .description(rs.getString("description"))
+                    .department(rs.getString("department"))
+                    .courtType(rs.getString("courttype"))
+                    .courtName(rs.getString("courtname"))
+                    .nextHearingDate(rs.getObject("nexthearingdate", Long.class))
+                    .status(Status.fromValue(rs.getString("status")))
+                    .additionalDetails(readJson(rs, "additionaldetails"))
+                    .auditDetails(buildAudit(rs))
+                    .judgement(buildJudgement(rs))
+                    .build();
+        } catch (SQLException e) {
+            throw new CustomException("CASE_MAPPING_ERROR", e.getMessage());
+        }
+    }
 
+    private void addAdvocate(ResultSet rs, CaseAggregate agg) throws SQLException {
         String advocateId = rs.getString("advocateid");
         if (advocateId == null) return;
 
-        List<Advocate> advocates = currentCase.getAdvocates();
-        if (!CollectionUtils.isEmpty(advocates)) {
-            for (Advocate adv : advocates) {
-                if (advocateId.equals(adv.getAdvocateId())) return;
-            }
-        }
-
         Advocate advocate = Advocate.builder()
                 .advocateId(advocateId)
-                .name(rs.getString("name"))
-                .role(rs.getString("role"))
+                .name(rs.getString("advocate_name"))
+                .role(rs.getString("advocate_role"))
                 .build();
 
-        currentCase.addAdvocatesItem(advocate);
+        agg.addAdvocate(advocate);
     }
 
-    private void addPetitioner(ResultSet rs, Case currentCase) throws SQLException {
-
-        String petitionerId = rs.getString("petitionerid");
+    private void addPetitioner(ResultSet rs, CaseAggregate agg) throws SQLException {
+        String petitionerId = rs.getString("petitioner_id");
         if (petitionerId == null) return;
-
-        List<Petitioner> petitioners = currentCase.getPetitioners();
-        if (!CollectionUtils.isEmpty(petitioners)) {
-            for (Petitioner p : petitioners) {
-                if (petitionerId.equals(p.getPetitionerId())) return;
-            }
-        }
 
         Petitioner petitioner = Petitioner.builder()
                 .petitionerId(petitionerId)
-                .name(rs.getString("name"))
-                .mobileNumber(rs.getString("mobilenumber"))
+                .name(rs.getString("petitioner_name"))
+                .mobileNumber(rs.getString("petitioner_mobile"))
                 .build();
 
-        currentCase.addPetitionersItem(petitioner);
+        agg.addPetitioner(petitioner);
     }
 
-    private void addRespondent(ResultSet rs, Case currentCase) throws SQLException {
-
-        String respondentId = rs.getString("respondentid");
+    private void addRespondent(ResultSet rs, CaseAggregate agg) throws SQLException {
+        String respondentId = rs.getString("respondent_id");
         if (respondentId == null) return;
-
-        List<Respondent> respondents = currentCase.getRespondents();
-        if (!CollectionUtils.isEmpty(respondents)) {
-            for (Respondent r : respondents) {
-                if (respondentId.equals(r.getRespondentId())) return;
-            }
-        }
 
         Respondent respondent = Respondent.builder()
                 .respondentId(respondentId)
-                .name(rs.getString("name"))
-                .mobileNumber(rs.getString("mobilenumber"))
+                .name(rs.getString("respondent_name"))
+                .mobileNumber(rs.getString("respondent_mobile"))
                 .build();
 
-        currentCase.addRespondentsItem(respondent);
+        agg.addRespondent(respondent);
     }
 
-    private void addDocument(ResultSet rs, Case currentCase) throws SQLException {
-
-        String docId = rs.getString("id");
-        if (docId == null) return;
-
-        List<Document> documents = currentCase.getDocuments();
-        if (!CollectionUtils.isEmpty(documents)) {
-            for (Document doc : documents) {
-                if (docId.equals(doc.getId())) return;
-            }
-        }
+    private void addDocument(ResultSet rs, CaseAggregate agg) throws SQLException {
+        String documentId = rs.getString("document_id");
+        if (documentId == null) return;
 
         Document document = Document.builder()
-                .id(docId)
+                .id(documentId)
                 .documentType(rs.getString("documenttype"))
                 .fileStoreId(rs.getString("filestoreid"))
                 .documentUid(rs.getString("documentuid"))
                 .build();
 
-        currentCase.addDocumentsItem(document);
+        agg.addDocument(document);
     }
 
-    /* -------------------- Audit -------------------- */
-
-    private AuditDetails getAuditDetails(ResultSet rs) throws SQLException {
-
-        Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-        if (rs.wasNull()) lastModifiedTime = null;
-
+    private AuditDetails buildAudit(ResultSet rs) throws SQLException {
         return AuditDetails.builder()
                 .createdBy(rs.getString("createdby"))
-                .createdTime(rs.getLong("createdtime"))
+                .createdTime(rs.getObject("createdtime", Long.class))
                 .lastModifiedBy(rs.getString("lastmodifiedby"))
-                .lastModifiedTime(lastModifiedTime)
+                .lastModifiedTime(rs.getObject("lastmodifiedtime", Long.class))
                 .build();
     }
 
-    /* -------------------- JSONB -------------------- */
+    private Judgement buildJudgement(ResultSet rs) throws SQLException {
+        String judgementId = rs.getString("judgementid");
+        if (judgementId == null) return null;
 
-    private JsonNode getAdditionalDetails(ResultSet rs, String key) {
+        return Judgement.builder()
+                .judgementId(judgementId)
+                .remark(rs.getString("judgement_remark"))
+                .orderDetail(rs.getString("orderdetail"))
+                .build();
+    }
 
+    private JsonNode readJson(ResultSet rs, String column) {
         try {
-            PGobject obj = (PGobject) rs.getObject(key);
-            return obj == null ? null : mapper.readTree(obj.getValue());
-        } catch (IOException | SQLException e) {
-            throw new CustomException("CASE_ADDITIONAL_DETAILS_PARSE_ERROR",
-                    "Failed to parse case additionalDetails");
+            PGobject obj = (PGobject) rs.getObject(column);
+            return obj == null ? null : objectMapper.readTree(obj.getValue());
+        } catch (Exception e) {
+            throw new CustomException(
+                    "JSON_PARSE_ERROR",
+                    "Failed to parse JSON column: " + column
+            );
         }
     }
 }
-

@@ -57,22 +57,21 @@ public class CaseController {
 
 		Case cases = caseService.fileCase(caseRequest);
 		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(caseRequest.getRequestInfo(), true);
-//		PropertyResponse response = PropertyResponse.builder()
-//				.properties(Arrays.asList(property))
-//				.responseInfo(resInfo)
-//				.build();
-		CaseResponse response = null;
+		CaseResponse response = CaseResponse.builder()
+				.cases(Arrays.asList(cases))
+				.responseInfo(resInfo)
+				.build();
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
 	
 	@PostMapping("/_update")
-	public ResponseEntity<PropertyResponse> update(@Valid @RequestBody PropertyRequest propertyRequest) {
+	public ResponseEntity<CaseResponse> update(@Valid @RequestBody CaseRequest caseRequest) {
 		
-		Property property = propertyService.updateProperty(propertyRequest);
-		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
-		PropertyResponse response = PropertyResponse.builder()
-				.properties(Arrays.asList(property))
+		Case cases = caseService.updateCase(caseRequest);
+		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(caseRequest.getRequestInfo(), true);
+		CaseResponse response = CaseResponse.builder()
+				.cases(Arrays.asList(cases))
 				.responseInfo(resInfo)
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -84,7 +83,7 @@ public class CaseController {
 		
 //		propertyValidator.validatePropertyCriteria(caseCriteria, requestInfoWrapper.getRequestInfo());
 		List<Case> cases = caseService.searchCases(caseCriteria,requestInfoWrapper.getRequestInfo());
-		CaseResponse response = CaseResponse.builder().Cases(cases).responseInfo(
+		CaseResponse response = CaseResponse.builder().cases(cases).responseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
