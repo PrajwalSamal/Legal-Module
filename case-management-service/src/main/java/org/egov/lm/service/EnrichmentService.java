@@ -9,14 +9,19 @@ import java.util.UUID;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lm.config.PropertyConfiguration;
 import org.egov.lm.models.AuditDetails;
+import org.egov.lm.models.Case;
 import org.egov.lm.models.Institution;
 import org.egov.lm.models.OwnerInfo;
+import org.egov.lm.models.Petitioner;
 import org.egov.lm.models.Property;
 import org.egov.lm.models.PropertyCriteria;
+import org.egov.lm.models.Respondent;
 import org.egov.lm.models.enums.Status;
 import org.egov.lm.models.user.User;
+import org.egov.lm.util.CaseUtil;
 import org.egov.lm.util.PTConstants;
 import org.egov.lm.util.PropertyUtil;
+import org.egov.lm.web.contracts.CaseRequest;
 import org.egov.lm.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +40,9 @@ public class EnrichmentService {
 
     @Autowired
     private PropertyConfiguration config;
+    
+    @Autowired
+    private CaseUtil caseUtil;
 
 
 
@@ -322,6 +330,47 @@ public class EnrichmentService {
 
                     property.getWorkflow().setAssignes(assignes);
             }
+    }
+    
+   
+    //Adding UUID to case,petitioners,respondents and document
+    public void enrichCreateCase(CaseRequest caseRequest) {
+    	RequestInfo requestInfo = caseRequest.getRequestInfo();
+    	
+    	AuditDetails auditDetails = caseUtil.getAuditDetails(requestInfo.getUserInfo().getUuid().toString(), true);
+    	
+    	caseRequest.getCases().setCaseId(UUID.randomUUID().toString());
+    	
+    	List<Petitioner> petitioners = caseRequest.getCases().getPetitioners();
+    	petitioners.forEach(petitioner -> petitioner.setPetitionerId(UUID.randomUUID().toString()));
+    	
+    	List<Respondent> respondents = caseRequest.getCases().getRespondents();
+    	respondents.forEach(respondent -> respondent.setRespondentId(UUID.randomUUID().toString()));
+    	
+    	if (!CollectionUtils.isEmpty(caseRequest.getCases().getDocuments()))
+    		caseRequest.getCases().getDocuments().forEach(doc -> {
+				doc.setId(UUID.randomUUID().toString());
+				if (null == doc.getStatus())
+					doc.setStatus(Status.ACTIVE);
+			});
+    	
+    	caseRequest.getCases().setAuditDetails(auditDetails);
+    
+    	
+    }
+    
+  public void enrichUpdateCase(CaseRequest caseRequest) {
+	    Case cases = caseRequest.getCases();
+        RequestInfo requestInfo = caseRequest.getRequestInfo();
+    	
+    	AuditDetails auditDetails = caseUtil.getAuditDetails(requestInfo.getUserInfo().getUuid().toString(), false);
+    	if(!CollectionUtils.isEmpty(cases.getAdvocates()))
+	    cases.getAdvocates().forEach(advocate -> advocate.setAdvocateId(UUID.randomUUID().toString()));
+    	
+    	if(!CollectionUtils.isEmpty(cases.getDocuments()))
+    		cases.getJudgement().setJudgementId(UUID.randomUUID().toString()); 
+    	
+    	cases.setAuditDetails(auditDetails);
     }
 
 
