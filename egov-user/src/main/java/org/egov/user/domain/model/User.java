@@ -1,6 +1,7 @@
 package org.egov.user.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ import javax.validation.constraints.Size;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -106,15 +108,16 @@ public class User {
 
     public void validateNewUser(boolean createUserValidateName) {
         if (isUsernameAbsent()
-                || (createUserValidateName && isNameAbsent())
+              || (createUserValidateName && isNameAbsent())
                 || isMobileNumberAbsent()
                 || isActiveIndicatorAbsent()
                 || isTypeAbsent()
                 || isPermanentAddressInvalid()
                 || isCorrespondenceAddressInvalid()
-                || isRolesAbsent()
+               // || isRolesAbsent()
                 || isOtpReferenceAbsent()
-                || isTenantIdAbsent()) {
+                || isTenantIdAbsent()) 
+                {
             throw new InvalidUserCreateException(this);
         }
     }

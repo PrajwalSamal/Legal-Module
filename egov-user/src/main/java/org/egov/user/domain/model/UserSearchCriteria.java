@@ -10,6 +10,7 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
@@ -30,6 +31,9 @@ public class UserSearchCriteria {
     private UserType type;
     private String tenantId;
     private List<String> roleCodes;
+    
+    
+    
 
     public void validate(boolean isInterServiceCall) {
         if (validateIfEmptySearch(isInterServiceCall) || validateIfTenantIdExists(isInterServiceCall)) {
@@ -69,4 +73,7 @@ public class UserSearchCriteria {
                     && isEmpty(tenantId);
 
     }
+
+
+	
 }
