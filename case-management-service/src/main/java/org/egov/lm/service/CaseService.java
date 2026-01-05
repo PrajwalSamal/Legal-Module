@@ -1,8 +1,11 @@
 package org.egov.lm.service;
 
+
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,6 +15,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lm.config.CaseConfiguration;
 import org.egov.lm.models.Advocate;
+import org.egov.lm.models.AuditDetails;
 import org.egov.lm.models.Case;
 import org.egov.lm.models.CaseCriteria;
 import org.egov.lm.models.enums.Status;
@@ -47,9 +51,19 @@ public class CaseService {
 		if (caseConfiguration.getIsWorkflowEnabled()) {
 			wfService.updateCaseWorkflow(caseRequest);
 		}
+		
+		AuditDetails auditDetails=new AuditDetails();
+		auditDetails.setCreatedBy("Ram");
+		auditDetails.setCreatedTime(System.currentTimeMillis());
+		auditDetails.setLastModifiedBy("ram");
+		auditDetails.setLastModifiedTime(System.currentTimeMillis());
+	
 
+		Case case1=caseRequest.getCases();
+		case1.setAuditDetails(auditDetails);
+		
 		producer.push(caseConfiguration.getSaveCaseTopic(), caseRequest);
-		caseRequest.getCases().setWorkflow(null);
+		//caseRequest.getCases().setWorkflow(null);
 		return caseRequest.getCases();
 	}
 

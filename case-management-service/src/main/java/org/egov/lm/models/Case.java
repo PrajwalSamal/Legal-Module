@@ -84,6 +84,7 @@ public class Case {
 	@JsonProperty("nextHearingDate")
 	private Long nextHearingDate;
 
+	@JsonProperty("judgement")
 	private Judgement judgement;
 
 	/* -------------------- Documents -------------------- */

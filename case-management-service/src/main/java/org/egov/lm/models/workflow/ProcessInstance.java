@@ -39,7 +39,7 @@ import lombok.ToString;
 public class ProcessInstance {
 
 	@Size(max = 64)
-	@JsonProperty("id")
+	@JsonProperty("workflowid")
 	private String id;
 
 	@NotNull

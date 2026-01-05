@@ -6,7 +6,7 @@ serviceMaps:
       fromTopic: save-case-registry
       isTransaction: true
       queryMaps:
-        - query: "INSERT INTO eg_lm_case (caseId, tenantId, caseType, caseCategory, title, description, department, courtType, courtName, nextHearingDate, judgementId, workflowId, additionalDetails, createdBy, createdTime, lastModifiedBy, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        - query: "INSERT INTO eg_lm_case (caseid, tenantid, casetype, casecategory, title, description, department, courttype, courtname, nexthearingdate, workflowid, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);"
           basePath: case
           jsonMaps:
             - jsonPath: $.case.caseId
@@ -19,9 +19,7 @@ serviceMaps:
             - jsonPath: $.case.courtType
             - jsonPath: $.case.courtName
             - jsonPath: $.case.nextHearingDate
-            - jsonPath: $.case.judgement.judgementId
-            - jsonPath: $.case.workflow.workflowId
-            - jsonPath: $.case.additionalDetails
+            - jsonPath: $.case.workflow.workflowid
             - jsonPath: $.case.auditDetails.createdBy
             - jsonPath: $.case.auditDetails.createdTime
             - jsonPath: $.case.auditDetails.lastModifiedBy
@@ -31,9 +29,9 @@ serviceMaps:
           basePath: case.advocates.*
           jsonMaps:
             - jsonPath: $.case.caseId
-            - jsonPath: $.case.advocates.[*].advocateId
-            - jsonPath: $.case.advocates.[*].name
-            - jsonPath: $.case.advocates.[*].mobileNumber
+            - jsonPath: $.case.advocates[*].advocateId
+            - jsonPath: $.case.advocates[*].name
+            - jsonPath: $.case.advocates[*].mobileNumber
 
         - query: "INSERT INTO eg_lm_case_petitioner (id, caseId, name, address, contactNo) VALUES (?, ?, ?, ?, ?);"
           basePath: case.petitioners.*
