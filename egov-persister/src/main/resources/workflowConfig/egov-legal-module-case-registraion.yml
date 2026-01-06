@@ -52,7 +52,7 @@ serviceMaps:
         - query: "INSERT INTO eg_lm_case_document (id, caseId, documentType, fileStoreId) VALUES (?, ?, ?, ?);"
           basePath: case.documents.*
           jsonMaps:
-            - jsonPath: $.case.documents.*.documentUid
+            - jsonPath: $.case.documents.*.id
             - jsonPath: $.case.caseId
             - jsonPath: $.case.documents.*.documentType
             - jsonPath: $.case.documents.*.fileStoreId
@@ -62,6 +62,6 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.case.judgement.judgementId
             - jsonPath: $.case.caseId
-            - jsonPath: $.case.judgement.orderDetail
             - jsonPath: $.case.judgement.remark
+            - jsonPath: $.case.judgement.orderDetail
 

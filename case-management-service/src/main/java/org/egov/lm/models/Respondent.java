@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
 @ToString
@@ -22,7 +21,6 @@ import lombok.ToString;
 public class Respondent {
 
     @JsonProperty("respondentId")
-    @NotBlank(message = "respondentId is mandatory")
     private String respondentId;
 
     @JsonProperty("name")

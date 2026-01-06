@@ -15,9 +15,7 @@ public class AdvocateQueryBuilder {
 	        "FROM eg_lm_case_advocate where ";
 
 	
-	public String fetchCaseAdvocates(CaseRequest caseRequest) {
-
-	    List<Object> params = new ArrayList<>();
+	public String fetchCaseAdvocates(CaseRequest caseRequest, List<Object> params) {
 
 	    StringBuilder query = new StringBuilder();
 	    query.append(CASE_ADVOCATE_SELECT);

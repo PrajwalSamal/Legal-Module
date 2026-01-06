@@ -22,7 +22,6 @@ import lombok.ToString;
 public class Petitioner {
 
     @JsonProperty("petitionerId")
-    @NotBlank(message = "petitionerId is mandatory")
     private String petitionerId;
 
     @JsonProperty("name")

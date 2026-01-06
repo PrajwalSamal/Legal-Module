@@ -61,5 +61,22 @@ public class CaseConfiguration {
     
     @Value("${legal.create.workflow.name}")
     private String createLMWfName;
+    
+//    /mdms
+    @Value("${egov.mdms.host}")
+    private String mdmsHost;
+
+    @Value("${egov.mdms.search.endpoint}")
+    private String mdmsEndpoint;
+    
+    
+    
+  //IDGEN config
+    
+    @Value("${egov.idgen.host}")
+    private String idGenHost;
+
+    @Value("${egov.idgen.path}")
+    private String idGenPath;
 
 }

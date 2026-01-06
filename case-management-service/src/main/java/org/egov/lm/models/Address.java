@@ -60,12 +60,6 @@ public class Address {
 
 	@JsonProperty("street")
 	private String street;
-
-	@JsonProperty("locality")
-	private Locality locality;
-
-	@JsonProperty("geoLocation")
-	private GeoLocation geoLocation;
 	
 	@JsonProperty("additionalDetails")
 	private Object additionalDetails;

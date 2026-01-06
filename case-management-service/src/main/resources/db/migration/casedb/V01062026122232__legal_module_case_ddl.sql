@@ -42,6 +42,7 @@ CREATE INDEX idx_lm_case_hearing
     mobilenumber           VARCHAR(20),
     email                   VARCHAR(128),
     role                    VARCHAR(64),
+    activecasecount         VARCHAR(10),
     isgovernmentadvocate  BOOLEAN,
 
     createdby              VARCHAR(64),
