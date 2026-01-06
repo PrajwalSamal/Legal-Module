@@ -97,7 +97,7 @@ public class CaseService {
 			state = wfService.updateCaseWorkflow(caseRequest);
 		}
 
-		producer.push(caseConfiguration.getSaveCaseTopic(), caseRequest);
+		producer.push(caseConfiguration.getUpdateCaseTopic(), caseRequest);
 		caseRequest.getCases().setWorkflow(null);
 		return caseRequest.getCases();
 	}
