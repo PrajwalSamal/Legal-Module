@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lm.models.Case;
-import org.egov.lm.models.Property;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

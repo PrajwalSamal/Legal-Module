@@ -32,7 +32,6 @@ public class Case {
 	/* -------------------- Mandatory Identifiers -------------------- */
 
 	@JsonProperty("caseId")
-	@NotBlank(message = "caseId is mandatory for update")
 	private String caseId;
 
 	@JsonProperty("tenantId")
@@ -96,7 +95,6 @@ public class Case {
 	/* -------------------- Workflow -------------------- */
 
 	@JsonProperty("workflow")
-	@NotNull(message = "workflow is mandatory for case update")
 	private ProcessInstance workflow;
 
 	/* -------------------- Extensible Data -------------------- */

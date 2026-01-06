@@ -43,6 +43,9 @@ public class CaseService {
 
 	@Autowired
 	private WorkflowService wfService;
+	
+	@Autowired
+	private EnrichmentService enrichmentService;
 
 	private final SecureRandom random = new SecureRandom();
 
@@ -51,16 +54,9 @@ public class CaseService {
 		// validate
 		
 		//enrich
-		
+		enrichmentService.enrichCreateCase(caseRequest);
 		//
-		
-		AuditDetails auditDetails=new AuditDetails();
-		auditDetails.setCreatedBy("Ram");
-		auditDetails.setCreatedTime(System.currentTimeMillis());
-		auditDetails.setLastModifiedBy("ram");
-		auditDetails.setLastModifiedTime(System.currentTimeMillis());
-		
-		caseRequest.getCases().setAuditDetails(auditDetails);
+	
 	
 		if (caseConfiguration.getIsWorkflowEnabled()) {
 			wfService.updateCaseWorkflow(caseRequest);
@@ -95,16 +91,10 @@ public class CaseService {
 	}
 
 	public Case updateCase(@Valid CaseRequest caseRequest) {
-
 		State state = null;
-
+		enrichmentService.enrichUpdateCase(caseRequest);
 		if (caseConfiguration.getIsWorkflowEnabled()) {
 			state = wfService.updateCaseWorkflow(caseRequest);
-		}
-
-		if (state.getApplicationStatus().equalsIgnoreCase(Status.REGISTERED.toString())) {
-			Advocate advocate = getAdvocateToAllocate(caseRequest);
-			caseRequest.getCases().setAdvocates(Arrays.asList(advocate));
 		}
 
 		producer.push(caseConfiguration.getSaveCaseTopic(), caseRequest);
@@ -112,18 +102,6 @@ public class CaseService {
 		return caseRequest.getCases();
 	}
 
-	@Transactional
-	private Advocate getAdvocateToAllocate(@Valid CaseRequest caseRequest) {
-
-		List<Advocate> eligible = caseRepository.getAdvocates(caseRequest);
-
-		int minLoad = eligible.stream().mapToInt(Advocate::getActiveCaseCount).min().orElse(0);
-
-		List<Advocate> leastLoaded = eligible.stream().filter(a -> a.getActiveCaseCount() == minLoad)
-				.collect(Collectors.toList());
-
-		return leastLoaded.get(random.nextInt(leastLoaded.size()));
-
-	}
+	
 
 }

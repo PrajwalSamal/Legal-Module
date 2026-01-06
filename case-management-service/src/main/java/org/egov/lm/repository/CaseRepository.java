@@ -47,29 +47,6 @@ public class CaseRepository {
 	@Autowired
 	private AdvocateQueryBuilder builder;
 
-	public Boolean enrichCriteriaFromUser(CaseCriteria criteria, RequestInfo requestInfo) {
-
-		Set<String> ownerIds = new HashSet<String>();
-
-//		if (!CollectionUtils.isEmpty(criteria.getOwnerIds()))
-//			ownerIds.addAll(criteria.getOwnerIds());
-//		criteria.setOwnerIds(null);
-
-		String userTenant = criteria.getTenantId();
-		if (criteria.getTenantId() == null)
-			userTenant = requestInfo.getUserInfo().getTenantId();
-
-		UserSearchRequest userSearchRequest = userService.getBaseUserSearchRequest(userTenant, requestInfo);
-
-		UserDetailResponse userDetailResponse = userService.getUser(userSearchRequest);
-		if (CollectionUtils.isEmpty(userDetailResponse.getUser()))
-			return true;
-
-		// fetching property id from owner table and enriching criteria
-		ownerIds.addAll(userDetailResponse.getUser().stream().map(User::getUuid).collect(Collectors.toSet()));
-		return false;
-	}
-
 	public List<Case> getAllRegisterdCases(CaseCriteria criteria) {
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.buildPaginatedCaseIdQuery(criteria, preparedStmtList);
@@ -80,7 +57,7 @@ public class CaseRepository {
 
 	public List<Advocate> getAdvocates(@Valid CaseRequest caseRequest) {
 		List<Object> preparedStmtList = new ArrayList<>();
-		String query = builder.fetchCaseAdvocates(caseRequest);
+		String query = builder.fetchCaseAdvocates(caseRequest,preparedStmtList);
 
 		return jdbcTemplate.query(query, preparedStmtList.toArray(), advocateRowMapper);
 	}

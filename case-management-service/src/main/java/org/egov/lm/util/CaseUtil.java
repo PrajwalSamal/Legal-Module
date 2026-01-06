@@ -1,17 +1,13 @@
 package org.egov.lm.util;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.egov.lm.config.CaseConfiguration;
 import org.egov.lm.models.Case;
-import org.egov.lm.models.Property;
 import org.egov.lm.models.enums.CaseAction;
-import org.egov.lm.models.enums.CreationReason;
 import org.egov.lm.models.workflow.ProcessInstance;
 import org.egov.lm.models.workflow.ProcessInstanceRequest;
 import org.egov.lm.web.contracts.CaseRequest;
-import org.egov.lm.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
