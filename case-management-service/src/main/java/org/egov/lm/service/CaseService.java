@@ -22,6 +22,7 @@ import org.egov.lm.models.enums.Status;
 import org.egov.lm.models.workflow.State;
 import org.egov.lm.producer.Producer;
 import org.egov.lm.repository.CaseRepository;
+import org.egov.lm.validator.CaseValidator;
 import org.egov.lm.web.contracts.CaseRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +47,16 @@ public class CaseService {
 	
 	@Autowired
 	private EnrichmentService enrichmentService;
+	
+	@Autowired
+	private CaseValidator caseValidator;
 
 	private final SecureRandom random = new SecureRandom();
 
 	public Case fileCase(@Valid CaseRequest caseRequest) {
 
 		// validate
+		caseValidator.validateCreateRequest(caseRequest);
 		
 		//enrich
 		enrichmentService.enrichCreateCase(caseRequest);

@@ -21,7 +21,8 @@ import org.egov.tracer.model.CustomException;
 @Component
 public class CaseValidator {
 	
-		public final String emailReg = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+		private final String emailReg = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+		private final String mobReg = "\\d{10}";
 
 	   public void validateCreateRequest(CaseRequest request) {
 
@@ -38,7 +39,7 @@ public class CaseValidator {
 	        validateParties(request, errorMap);
 
 	        // Validate documents
-	        validateDocuments(request, errorMap);
+//	        validateDocuments(request, errorMap);
 
 	        // If there are any validation errors, throw exception
 	        if (!errorMap.isEmpty()) {
@@ -77,14 +78,14 @@ public class CaseValidator {
 	        List<Petitioner> petitioners = request.getCases().getPetitioners();
 	        List<Respondent> respondents = request.getCases().getRespondents();
 
-	        if (CollectionUtils.isEmpty(advocates)) {
-	            errorMap.put("ADVOCATE_MANDATORY", "At least one advocate must be provided for case creation");
-	        } else {
-	            for (Advocate advocate : advocates) {
-	                // Validate advocate fields
-	                validateAdvocate(advocate, errorMap);
-	            }
-	        }
+//	        if (CollectionUtils.isEmpty(advocates)) {
+//	            errorMap.put("ADVOCATE_MANDATORY", "At least one advocate must be provided for case creation");
+//	        } else {
+//	            for (Advocate advocate : advocates) {
+//	                // Validate advocate fields
+//	                validateAdvocate(advocate, errorMap);
+//	            }
+//	        }
 
 	        if (CollectionUtils.isEmpty(petitioners)) {
 	            errorMap.put("PETITIONER_MANDATORY", "At least one petitioner must be provided for case creation");
@@ -117,7 +118,7 @@ public class CaseValidator {
 	        }
 
 	        // Validate mobile number: Ensure it matches a valid phone number format
-	        if (StringUtils.isEmpty(advocate.getMobileNumber()) || !advocate.getMobileNumber().matches("\\d{10}")) {
+	        if (StringUtils.isEmpty(advocate.getMobileNumber()) || !advocate.getMobileNumber().matches(mobReg)) {
 	            errorMap.put("ADVOCATE_MOBILE_INVALID", "Advocate mobile number must be a valid 10-digit number");
 	        }
 
@@ -158,7 +159,7 @@ public class CaseValidator {
 //	        }
 
 	        // Validate mobile number: Ensure it matches a valid phone number format 
-	        if (StringUtils.isEmpty(petitioner.getMobileNumber()) || !petitioner.getMobileNumber().matches("\\d{10}")) {
+	        if (StringUtils.isEmpty(petitioner.getMobileNumber()) || !petitioner.getMobileNumber().matches(mobReg)) {
 	            errorMap.put("PETITIONER_MOBILE_INVALID", "Petitioner mobile number must be a valid 10-digit number");
 	        }
 
@@ -194,7 +195,7 @@ public class CaseValidator {
 	        }
 
 	        // Validate mobile number: Ensure it matches a valid phone number format
-	        if (StringUtils.isEmpty(respondent.getMobileNumber()) || !respondent.getMobileNumber().matches("\\d{10}")) {
+	        if (StringUtils.isEmpty(respondent.getMobileNumber()) || !respondent.getMobileNumber().matches(mobReg)) {
 	            errorMap.put("RESPONDENT_MOBILE_INVALID", "Respondent mobile number must be a valid 10-digit number");
 	        }
 
@@ -204,9 +205,9 @@ public class CaseValidator {
 	        }
 
 	        // Validate address: Ensure it's not null and contains valid data 
-	        if (respondent.getAddress() == null) {
-	            errorMap.put("RESPONDENT_ADDRESS_MANDATORY", "Respondent address is mandatory");
-	        }
+//	        if (respondent.getAddress() == null) {
+//	            errorMap.put("RESPONDENT_ADDRESS_MANDATORY", "Respondent address is mandatory");
+//	        }
 	    }
 
 	    /**
